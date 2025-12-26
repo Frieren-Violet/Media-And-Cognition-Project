@@ -85,7 +85,7 @@ def call_llm(prompt: str, api_key: str, base_url: str, model: str = "GLM-4.6") -
         prompt: 发送给模型的文本提示词
         api_key: API密钥
         base_url: API的基础URL
-        model: 要使用的模型ID，默认为"GLM-4"
+        model: 要使用的模型ID，默认为"GLM-4.6"
         
     注意事项：
         - 这是一个纯文本模型调用函数，不支持图片输入
