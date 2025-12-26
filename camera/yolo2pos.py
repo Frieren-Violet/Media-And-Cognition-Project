@@ -1,6 +1,7 @@
 #计算相机坐标系下的物块坐标
 import numpy as np 
 import json
+import cv2 as cv
 
 # 导入参数(右相机内参)
 data = np.load("stereo_calib.npz")
@@ -34,3 +35,24 @@ np.savez(
 )
 
 print("物块相机坐标已保存到 cam_pos.npz")
+
+'''
+Z = 350
+right_path = 'E:/AI_project/picture/test/right.jpg'
+right = cv.imread(right_path)
+def mouse_callback(event, x, y, flag, param): 
+    if event == cv.EVENT_LBUTTONDOWN: 
+        Xc = (x - cx) * Z / fx
+        Yc = (y - cy) * Z / fy 
+        print(f"pixel=({x},{y}) -> 2D=({Xc:.3f}, {Yc:.3f})")
+
+cv.imshow("right", right) 
+cv.setMouseCallback("right", mouse_callback) 
+while True: 
+    cv.imshow("right", right) 
+    key = cv.waitKey(10) & 0xFF 
+    if key == 27: # ESC 退出 
+        break 
+
+cv.destroyAllWindows()
+'''
