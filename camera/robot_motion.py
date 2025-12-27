@@ -3,6 +3,31 @@ import time
 import sys
 import numpy as np
 import os
+import cv2 as cv
+
+pred_points = np.array([
+    [162.3273, -33.0948],
+    [149.6468, -21.4619],
+    [133.6215, -65.2749],
+    [137.3588,  12.0139],
+    [160.0421, -38.6392],
+    [147.7184, -28.4409]
+], dtype=np.float32)
+
+# 实际坐标（机械臂真实到达）
+real_points = np.array([
+    [151.5, -37.8],
+    [146.8, -21.2],
+    [131.7, -62.6],
+    [135.7,   8.3],
+    [158.6, -36.8],
+    [139.2, -33.6]
+], dtype=np.float32)
+
+# 估计仿射变换
+X, inliers = cv.estimateAffine2D(pred_points, real_points)
+X_inv = cv.invertAffineTransform(X)
+
 
 def main():
     base_dir = os.path.dirname(__file__)   # camera/
@@ -44,13 +69,18 @@ def main():
 
     pt = np.array([Pc[0], Pc[1], 1.0])
     xr, yr = M @ pt
-    print(xr, yr)
+    print("预测坐标:", xr, yr)
 
-    mc.send_coords([xr, yr, 60.0, -155.32, -15.95, 155], 80, 0)
+    #二次补偿
+    vec = np.array([xr, yr, 1.0])
+    x_c, y_c = X_inv @ vec
+    print("补偿坐标:", x_c, y_c)
+
+    mc.send_coords([x_c, y_c, 60.0, -154.65, -19.53, 158.40], 80, 0)
     time.sleep(3)
 
     real = mc.get_coords()
-    print("当前位置：", real)   
+    print("实际坐标:", real)   
 
 if __name__ == '__main__':
     main()
