@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['cube']
+
+roboflow:
+  workspace: yxp-giimc
+  project: mot-odplk
+  version: 3
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/yxp-giimc/mot-odplk/dataset/3

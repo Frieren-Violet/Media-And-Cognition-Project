@@ -32,5 +32,9 @@ Pr = np.array([
 ], dtype=np.float32)
 
 M = cv.estimateAffine2D(Pc, Pr)[0]
+np.savez(
+    "./camera/robot_calib.npz",
+    M=M
+)
 
-print("Affine matrix:\n", M)
+print("标定参数已保存到 robot_calib.npz")
