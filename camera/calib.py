@@ -3,11 +3,11 @@ import cv2 as cv
 import os
 
 # 修改为你自己的摄像头编号
-LEFT_CAM_ID  = 1
+LEFT_CAM_ID  = 2
 RIGHT_CAM_ID = 0
 
-SAVE_DIR_LEFT  = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/left"
-SAVE_DIR_RIGHT = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/right"
+SAVE_DIR_LEFT  = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/left"
+SAVE_DIR_RIGHT = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/right"
 
 
 os.makedirs(SAVE_DIR_LEFT, exist_ok=True)
@@ -165,78 +165,10 @@ np.savez(
 )
 
 print("标定参数已保存到 stereo_calib.npz")
-
-
-
-import cv2 as cv
-import numpy as np
-import glob
-import os
-
-# ===================== 棋盘参数 =====================
-BOARD_SIZE = (11, 8)      # 内角点数 (cols, rows)
-SQUARE_SIZE = 20.0        # 方格边长 (mm)
-
-# ===================== 图片路径 =====================
-IMAGE_PATH = r"E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/right/*.jpg"
-
-# ===================== 生成棋盘世界坐标 =====================
-objp = np.zeros((BOARD_SIZE[0] * BOARD_SIZE[1], 3), np.float32)
-objp[:, :2] = np.mgrid[0:BOARD_SIZE[0], 0:BOARD_SIZE[1]].T.reshape(-1, 2)
-objp *= SQUARE_SIZE
-
-objpoints = []   # 3D 世界坐标
-imgpoints = []   # 2D 像素坐标
-
-images = sorted(glob.glob(IMAGE_PATH))
-assert len(images) > 0, "未找到标定图片"
-
-# ===================== 提取角点 =====================
-for img_path in images:
-    img = cv.imread(img_path)
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-
-    ret, corners = cv.findChessboardCorners(gray, BOARD_SIZE)
-
-    if ret:
-        objpoints.append(objp)
-
-        corners = cv.cornerSubPix(
-            gray, corners, (11, 11), (-1, -1),
-            (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-        )
-        imgpoints.append(corners)
-
-        # 可视化检查
-        cv.drawChessboardCorners(img, BOARD_SIZE, corners, ret)
-        cv.imshow("Corners", img)
-        cv.waitKey(10000)
-
-cv.destroyAllWindows()
-
-# ===================== 单目标定 =====================
-image_size = gray.shape[::-1]  # (width, height)
-
-ret, K, dist, rvecs, tvecs = cv.calibrateCamera(
-    objpoints, imgpoints, image_size, None, None
-)
-
-# ===================== 输出结果 =====================
-print("=== 单目相机标定结果 ===")
-print("RMS 重投影误差:", ret)
-print("相机内参 K:\n", K)
-print("畸变系数 dist:\n", dist)
-
-# ===================== 保存参数 =====================
-np.savez(
-    "mono_calib_right.npz",
-    K=K,
-    dist=dist,
-    image_size=image_size
-)
-
-print("标定参数已保存到 mono_calib_right.npz")
 """
+
+
+
 
 
 

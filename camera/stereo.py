@@ -1,7 +1,12 @@
 #双目定位，暂时用不到
 import numpy as np
 import cv2 as cv
-data = np.load("stereo_calib.npz")
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+calib_path = os.path.join(BASE_DIR, "stereo_calib.npz")
+
+data = np.load(calib_path)
 
 K_l = data["K_l"]
 dist_l = data["dist_l"]
@@ -21,8 +26,8 @@ def mouse_callback(event, x, y, flag, param):
         X, Y, Z = points_3d[y, x]
         print(f"pixel=({x},{y}) -> 3D=({X:.3f}, {Y:.3f}, {Z:.3f})")
 
-left_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/left.jpg'
-right_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/right.jpg'
+left_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/left/01.jpg'
+right_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/right/01.jpg'
 left = cv.imread(left_path)
 right = cv.imread(right_path)
 
@@ -45,10 +50,10 @@ stereo = cv.StereoSGBM_create(
 disp = stereo.compute(left_rect, right_rect).astype(np.float32) / 16.0
 points_3d = cv.reprojectImageTo3D(disp, Q)
 
-cv.imshow("right", right)
-cv.setMouseCallback("right", mouse_callback)
+cv.imshow("left", left)
+cv.setMouseCallback("left", mouse_callback)
 while True:
-    cv.imshow("right", right)
+    cv.imshow("left", left)
 
     key = cv.waitKey(10) & 0xFF
     if key == 27:  # ESC 退出
