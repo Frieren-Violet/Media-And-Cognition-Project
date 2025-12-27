@@ -4,10 +4,12 @@ import json
 import cv2 as cv
 
 # 导入参数(右相机内参)
-data = np.load("stereo_calib.npz")
-K_r = data["K_r"]
-fx, fy = K_r[0,0], K_r[1,1]
-cx, cy = K_r[0,2], K_r[1,2]
+data = np.load("calib_right.npz")
+K = data["K"]
+dist = data["dist"]
+fx, fy = K[0,0], K[1,1]
+cx, cy = K[0,2], K[1,2]
+
 
 # 读取yolo物体框坐标
 with open('yolo_results.json', 'r') as f:
@@ -21,10 +23,18 @@ Z = 350
 x1, y1, x2, y2 = best_obj['xyxy']
 u = (x1 + x2) / 2
 v = (y1 + y2) / 2
-
+print(u, v)
 # 像素 → 相机坐标
-Xc = (u - cx) * Z / fx
-Yc = (v - cy) * Z / fy
+# 构造像素点 (N,1,2)
+pts = np.array([[[u, v]]], dtype=np.float32)
+
+# 去畸变 + 归一化
+undistorted = cv.undistortPoints(pts, K, dist)
+
+# 这是归一化相机坐标 (x', y')
+x_norm, y_norm = undistorted[0, 0]
+Xc = x_norm * Z 
+Yc = y_norm * Z
 Zc = Z
 Pc = np.array([Xc, Yc, Zc])
 print(Pc)
@@ -38,7 +48,7 @@ print("物块相机坐标已保存到 cam_pos.npz")
 
 '''
 Z = 350
-right_path = 'E:/AI_project/picture/test/right.jpg'
+right_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/right.jpg'
 right = cv.imread(right_path)
 def mouse_callback(event, x, y, flag, param): 
     if event == cv.EVENT_LBUTTONDOWN: 

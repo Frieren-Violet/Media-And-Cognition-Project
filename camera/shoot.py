@@ -10,7 +10,7 @@ while(cap.isOpened()):#检测是否在开启状态
     cv.imshow("Capture_Test",Vshow)#显示图像
     k = cv.waitKey(1) & 0xFF#按键判断
     if k == ord('s'):#保存
-        cv.imwrite('E:/AI_project/picture/test/' + name + ".jpg", Vshow)#保存路径
+        cv.imwrite('E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/' + name + ".jpg", Vshow)#保存路径
         print("success to save " + name + ".jpg")
         print("-------------------------")
     elif k == ord(' '):#空格退出

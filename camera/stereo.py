@@ -16,13 +16,13 @@ P2 = data["P2"]
 Q = data["Q"]
 image_size = tuple(data["image_size"])
 
-def mouse_callback(event, x, y):
+def mouse_callback(event, x, y, flag, param):
     if event == cv.EVENT_LBUTTONDOWN:
         X, Y, Z = points_3d[y, x]
         print(f"pixel=({x},{y}) -> 3D=({X:.3f}, {Y:.3f}, {Z:.3f})")
 
-left_path = 'E:/AI_project/picture/test/left.jpg'
-right_path = 'E:/AI_project/picture/test/right.jpg'
+left_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/left.jpg'
+right_path = 'E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/right.jpg'
 left = cv.imread(left_path)
 right = cv.imread(right_path)
 
@@ -45,10 +45,10 @@ stereo = cv.StereoSGBM_create(
 disp = stereo.compute(left_rect, right_rect).astype(np.float32) / 16.0
 points_3d = cv.reprojectImageTo3D(disp, Q)
 
-cv.imshow("left", left)
-cv.setMouseCallback("left", mouse_callback)
+cv.imshow("right", right)
+cv.setMouseCallback("right", mouse_callback)
 while True:
-    cv.imshow("left", left)
+    cv.imshow("right", right)
 
     key = cv.waitKey(10) & 0xFF
     if key == 27:  # ESC 退出

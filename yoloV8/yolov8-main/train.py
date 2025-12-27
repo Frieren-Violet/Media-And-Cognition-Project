@@ -1,9 +1,9 @@
 from ultralytics import YOLO
 if __name__ == '__main__':
     # 加载模型
-    model = YOLO(r'E:/AI_project/yoloV8/yolov8-main/ultralytics/models/v8/yolov8n.yaml')
+    model = YOLO("yolov8n.pt")
     # 训练模型
-    results = model.train(data=r'E:/AI_project/yoloV8/yolov8-main/ultralytics/datasets/coco8.yaml',  
+    results = model.train(data="coco128.yaml",  
                            cache=False,
                            imgsz=640,
                            epochs=100,

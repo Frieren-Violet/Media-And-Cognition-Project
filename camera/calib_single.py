@@ -3,23 +3,22 @@ import cv2 as cv
 import os
 
 # 修改为你自己的摄像头编号
-LEFT_CAM_ID  = 1
+
 RIGHT_CAM_ID = 0
 
-SAVE_DIR_LEFT  = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/left"
+"""
 SAVE_DIR_RIGHT = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/right"
 
 
-os.makedirs(SAVE_DIR_LEFT, exist_ok=True)
+
 os.makedirs(SAVE_DIR_RIGHT, exist_ok=True)
 
-cap_l = cv.VideoCapture(LEFT_CAM_ID)
+
 cap_r = cv.VideoCapture(RIGHT_CAM_ID)
 
 # 固定分辨率（标定和使用必须一致）
 WIDTH, HEIGHT = 640, 480
-cap_l.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
-cap_l.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+
 cap_r.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
 cap_r.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 
@@ -27,24 +26,24 @@ idx = 0
 print("按 s 保存一组左右图，按 q 退出")
 
 while True:
-    ret_l, frame_l = cap_l.read()
+  
     ret_r, frame_r = cap_r.read()
 
-    if not ret_l or not ret_r:
+    if not ret_r:
         print("摄像头读取失败")
         break
 
-    cv.imshow("Left", frame_l)
+   
     cv.imshow("Right", frame_r)
 
     key = cv.waitKey(1) & 0xFF
 
     if key == ord('s'):
         idx += 1
-        left_path  = f"{SAVE_DIR_LEFT}/{idx:02d}.jpg"
+       
         right_path = f"{SAVE_DIR_RIGHT}/{idx:02d}.jpg"
 
-        cv.imwrite(left_path, frame_l)
+       
         cv.imwrite(right_path, frame_r)
 
         print(f"保存第 {idx} 组")
@@ -52,11 +51,11 @@ while True:
     elif key == ord('q'):
         break
 
-cap_l.release()
+
 cap_r.release()
 cv.destroyAllWindows()
 
-"""
+#双目标定
 import numpy as np
 import glob
 
@@ -165,8 +164,9 @@ np.savez(
 )
 
 print("标定参数已保存到 stereo_calib.npz")
+"""
 
-
+#单目标定
 
 import cv2 as cv
 import numpy as np
@@ -210,7 +210,7 @@ for img_path in images:
         # 可视化检查
         cv.drawChessboardCorners(img, BOARD_SIZE, corners, ret)
         cv.imshow("Corners", img)
-        cv.waitKey(10000)
+        cv.waitKey(1000)
 
 cv.destroyAllWindows()
 
@@ -229,14 +229,10 @@ print("畸变系数 dist:\n", dist)
 
 # ===================== 保存参数 =====================
 np.savez(
-    "mono_calib_right.npz",
+    "calib_right.npz",
     K=K,
     dist=dist,
     image_size=image_size
 )
 
-print("标定参数已保存到 mono_calib_right.npz")
-"""
-
-
-
+print("标定参数已保存到 calib_right.npz")
