@@ -6,10 +6,10 @@ import os
 LEFT_CAM_ID  = 2
 RIGHT_CAM_ID = 0
 
-SAVE_DIR_LEFT  = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/left"
-SAVE_DIR_RIGHT = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/test/right"
+SAVE_DIR_LEFT  = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/left"
+SAVE_DIR_RIGHT = "E:/AI_project/git_set/Media-And-Cognition-Project/picture/calibrate/right"
 
-
+"""
 os.makedirs(SAVE_DIR_LEFT, exist_ok=True)
 os.makedirs(SAVE_DIR_RIGHT, exist_ok=True)
 
@@ -120,7 +120,9 @@ ret_r, K_r, dist_r, _, _ = cv.calibrateCamera(
 print("Left RMS:", ret_l)
 print("Right RMS:", ret_r)
 
+
 flags = cv.CALIB_FIX_INTRINSIC
+#flags = cv.CALIB_USE_INTRINSIC_GUESS
 
 ret, K_l, dist_l, K_r, dist_r, R, T, E, F = cv.stereoCalibrate(
     objpoints,
@@ -143,7 +145,7 @@ R1, R2, P1, P2, Q, roi1, roi2 = cv.stereoRectify(
     image_size,
     R, T,
     flags=cv.CALIB_ZERO_DISPARITY,
-    alpha=0
+    alpha=1
 )
 
 print("Q matrix:\n", Q)
@@ -165,7 +167,7 @@ np.savez(
 )
 
 print("标定参数已保存到 stereo_calib.npz")
-"""
+
 
 
 
